@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DatabaseService } from 'src/database/database.service';
@@ -48,16 +49,22 @@ export class UsersService {
             }
         })
         if(userExist) throw new BadRequestException('User already exist')
-        return this.databaseService.users.create({data: createUserDto})
+        const passwordHash = await bcrypt.hash(createUserDto.password, 10)
+        createUserDto.password = passwordHash;
+        let createdUser =  await this.databaseService.users.create({data: createUserDto})
+        const { password, ...user } = createdUser;
+        return user
     }
 
     async update(id: number, updateUserDto: UpdateUserDto){
-        return await this.databaseService.users.update({
+        const  updatedUser = await this.databaseService.users.update({
             where: {
               id,
             },
             data: updateUserDto
-          })
+        })
+        const { password, ...user } = updatedUser;
+        return user
     }
 
     async delete(id: number){
