@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { Request } from '@nestjs/common';
 
 @Controller('users')
 export class UsersController {
@@ -11,6 +13,12 @@ export class UsersController {
     @Get()
     findAll(@Query('role') role?: 'INTERN' | 'ADMIN' | 'ENGINEER') {
         return this.usersService.findAll(role)
+    }
+
+    @Get('profile')
+    @UseGuards(JwtGuard)
+    profile(@Request() req){
+        return req.user
     }
 
     @Get(':id')
