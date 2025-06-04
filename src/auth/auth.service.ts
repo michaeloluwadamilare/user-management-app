@@ -47,6 +47,7 @@ export class AuthService {
             username: user.username
         }
         const token = await this.jwtService.signAsync(tokenPayload)
-        return {token, user}
+        const expiresIn = '1h'
+        return {token,expiresIn, user}
     }
 }
