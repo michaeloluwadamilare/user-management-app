@@ -48,6 +48,6 @@ export class AuthService {
         }
         const token = await this.jwtService.signAsync(tokenPayload)
         const expiresIn = '1h'
-        return {token,expiresIn, user}
+        return { token, expiresIn, user }
     }
 }
