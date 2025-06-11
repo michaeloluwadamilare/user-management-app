@@ -5,7 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dto/login-auth.dto';
 
 type AuthInput = {username: string, password: string}
-type SignInData = {userId: number, username: string}
+type SignInData = {userId: number, username: string, role: string}
 
 @Injectable()
 export class AuthService {
@@ -44,7 +44,8 @@ export class AuthService {
     {
         const tokenPayload = {
             sub: user.userId,
-            username: user.username
+            username: user.username,
+            role: user.role
         }
         const token = await this.jwtService.signAsync(tokenPayload)
         const expiresIn = '1h'
