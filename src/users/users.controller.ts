@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
 import { Request } from '@nestjs/common';
+import { RolesGuard } from 'src/auth/guards/role.guard';
 
 @Controller('users')
 export class UsersController {
@@ -11,6 +12,7 @@ export class UsersController {
     constructor(private readonly usersService: UsersService){}
 
     @Get()
+    @UseGuards(JwtGuard, RolesGuard)
     findAll(@Query('role') role?: 'INTERN' | 'ADMIN' | 'ENGINEER') {
         return this.usersService.findAll(role)
     }
